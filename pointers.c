@@ -8,6 +8,24 @@ struct employee_t {
   bool is_manager;
 };
 
+typedef enum { 
+  STATUS_GOOD,
+  STATUS_BAD,
+} status_t;
+
+status_t allocate_employees(struct employee_t **employees, int len) {
+  struct employee_t *temp = NULL;
+  temp = realloc(*employees, len);
+  
+  if(temp == NULL) {
+    *employees == NULL;
+    return STATUS_BAD;
+  }
+  
+  *employees = temp;
+  return STATUS_GOOD;
+}
+
 int init_employee(struct employee_t *e) {
   // static will create global variable but only we can access it
   // it call data hidding
@@ -19,6 +37,19 @@ int init_employee(struct employee_t *e) {
   e->is_manager = false;
 
   return sNumEmployees ;
+}
+
+void double_pointer() {
+  int n = 3;
+  struct employee_t *employees = malloc(sizeof(struct employee_t) * n);
+  if (STATUS_BAD == allocate_employees(&employees, 10)) {
+    printf("Failed to re-allocate employees\n");
+  }
+
+  printf("Success to re-allocate employees\n");
+  
+  free(employees);
+  employees = NULL;
 }
 
 int dynamic_allocator(){
@@ -44,6 +75,7 @@ int dynamic_allocator(){
 
 int main (){
   
+  double_pointer();
   return dynamic_allocator();;
 }
 
