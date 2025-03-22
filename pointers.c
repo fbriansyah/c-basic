@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h> // for malloc
 
 struct employee_t {
   int id;
@@ -7,33 +8,40 @@ struct employee_t {
   bool is_manager;
 };
 
-void init_employee(struct employee_t *e) {
-  e->id = 0;
+int init_employee(struct employee_t *e) {
+  // static will create global variable but only we can access it
+  // it call data hidding
+  static int sNumEmployees = 0;
+  sNumEmployees++;
+  
+  e->id = sNumEmployees;
   e->income = 0;
   e->is_manager = false;
 
-  return ;
+  return sNumEmployees ;
 }
 
 int main (){
   struct employee_t feb;
-
-  init_employee(&feb);
-  
-  printf("%d\n", feb.id);
-  printf("%d\n", feb.income);
-  
+  // setup dynamic allocator
   int n = 3;
   struct employee_t *employees = malloc(sizeof(struct employee_t) * n);
-  if  (employees == NUUL){
+  if  (employees == NULL){
     printf("the allocator failed\n");
     return -1;
   }
-  init_employee(employees[0]);
+  
+  int i = 0;
+  for(i = 0; i < n; i++) {
+    int id = init_employee(&employees[i]);
+    printf("Initialize new employee with ID: %d\n", id);
+  }
+
+  free(employees);
+  employees = NULL;
+  // end setup dynamic allocator
   return 0;
 }
-
-
 
 
 
