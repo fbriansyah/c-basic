@@ -21,8 +21,7 @@ int init_employee(struct employee_t *e) {
   return sNumEmployees ;
 }
 
-int main (){
-  struct employee_t feb;
+int dynamic_allocator(){
   // setup dynamic allocator
   int n = 3;
   struct employee_t *employees = malloc(sizeof(struct employee_t) * n);
@@ -41,6 +40,11 @@ int main (){
   employees = NULL;
   // end setup dynamic allocator
   return 0;
+}
+
+int main (){
+  
+  return dynamic_allocator();;
 }
 
 
