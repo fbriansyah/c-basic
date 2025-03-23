@@ -19,6 +19,7 @@ void write_example(int fd){
 
 int main (int argc, char *argv[]) {
   struct database_header_t head = {0};
+  struct stat fileHeader = {0};
   
   if (argc != 2) {
     printf("Usage: %s <filename>\n", argv[0]);
@@ -41,6 +42,19 @@ int main (int argc, char *argv[]) {
   printf("Database Version %d\n", head.version);
   printf("Number of employees %d\n", head.employees);
   printf("Data base length %d\n", head.filelength);
+
+  // read file header
+  if( fstat(fd, &fileHeader) == -1 ) {
+    perror("read");
+    close(fd);
+    return -1;
+  }
+
+  if (fileHeader.st_size != head.filelength) {
+    printf("HACKER DETECTED!\n");
+    close(fd);
+    return -1;
+  }
   
   // Close file
   close(fd);
